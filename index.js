@@ -1,6 +1,6 @@
 const readline = require('readline');
 const Promise = require('bluebird');
-const {addFunction, parse} = require('./parser');
+const {addFunction, parse, listCommands} = require('./parser');
 const {addAuthFunctions} = require('./auth/commands');
 const {addV1Functions} = require('./apiv1/commands');
 
@@ -12,11 +12,30 @@ const lineProcessor = prompt => Promise.fromCallback(callback => {
 addAuthFunctions();
 addV1Functions();
 
-addFunction('QUIT', false, () => Promise.resolve().then(() => {
-    console.log('Exiting.... goodbye!');
-    rl.close();
-    return 'QUIT';
-}));
+addFunction({
+    command: 'QUIT',
+    description: 'Exits',
+    cb: () => Promise
+        .resolve()
+        .then(() => {
+            console.log('Exiting.... goodbye!');
+            rl.close();
+            return 'QUIT';
+        })
+});
+
+addFunction({
+    command: 'help',
+    description: 'Shows the list of supported commands.',
+    cb: () => Promise
+        .resolve()
+        .then(() => {
+            listCommands().forEach(commandDesc => {
+                console.log(`${commandDesc.command}: ${commandDesc.description}`);
+            });
+            return '';
+        })
+});
 
 async function processQuestionAnswerAsync() {
     let output;

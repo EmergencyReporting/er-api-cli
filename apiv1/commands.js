@@ -1,11 +1,21 @@
 const {addFunction} = require('../parser');
-const {getMyUser} = require('./v1Services');
+const {getMyUser, getUsers} = require('./v1Services');
 
 const addV1Functions = () => {
-    addFunction('v1UsersMe', false, () => getMyUser().then(data => {
-        console.log(JSON.stringify(data));
-        return true;
-    }));
+    addFunction({
+        command: 'v1UsersMe',
+        cb: () => getMyUser().then(data => {
+            console.log(JSON.stringify(data));
+            return true;
+        })
+    });
+    addFunction({
+        command: 'v1Users',
+        cb: () => getUsers({limit: 1000}).then(data => {
+            console.log(JSON.stringify(data));
+            return true;
+        })
+    });
 };
 
 module.exports = {

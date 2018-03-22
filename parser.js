@@ -3,12 +3,20 @@ const commandParser = /^([\w]+)\s*(.*)$/;
 
 let commands = {};
 
-const addFunction = (command, cmdRegEx, cb) => {
+const addFunction = ({command, description, cmdRegEx, cb}) => {
     commands[command] = {
         cmdRegEx,
+        description,
         cb
     };
 }
+
+const listCommands = () => reduce(commands, (acc, {
+    description = ''
+}, command) => {
+    acc.push({command, description});
+    return acc;
+}, []);
 
 const parse = input => {
     const match = commandParser.exec(input);
@@ -31,5 +39,6 @@ const parse = input => {
 
 module.exports = {
     addFunction,
-    parse
+    parse,
+    listCommands
 };
