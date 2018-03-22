@@ -1,0 +1,20 @@
+{
+  "name": "er-cli",
+  "version": "1.0.0",
+  "description": "Commandline Emergency Reporting API browser",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "bluebird": "^3.5.1",
+    "cli-parser": "^1.0.4",
+    "lodash.reduce": "^4.6.0"
+  },
+  "devDependencies": {
+    "jest": "^22.4.2"
+  }
+}
