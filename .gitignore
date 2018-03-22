@@ -1,1 +1,4 @@
 node_modules/
+
+# persisted info that does not need to be checked in
+auth.json
