@@ -1,5 +1,6 @@
 const readline = require('readline');
 const Promise = require('bluebird');
+const columnify = require('columnify');
 const {addFunction, parse, listCommands} = require('./parser');
 const {addAuthFunctions} = require('./auth/commands');
 const {addV1Functions} = require('./apiv1/commands');
@@ -28,11 +29,10 @@ addFunction({
     command: 'help',
     description: 'Shows the list of supported commands.',
     cb: () => Promise
-        .resolve()
-        .then(() => {
-            listCommands().forEach(commandDesc => {
-                console.log(`${commandDesc.command}: ${commandDesc.description}`);
-            });
+        .resolve(listCommands())
+        .then(commands => columnify(commands.map(({command, description}) => ({command, description}))))
+        .then(formattedData => {
+            console.log(formattedData);
             return '';
         })
 });

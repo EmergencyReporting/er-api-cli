@@ -27,7 +27,17 @@ const getUsers = (params) => getAccessToken().then(accessToken => axios({
     params
 }).then(response => response.data));
 
+const getUser = (userID, params) => getAccessToken().then(accessToken => axios({
+    url: `${env.API}/V1/users/${userID}`,
+    method: 'get',
+    headers: {
+        Authorization: accessToken
+    },
+    params
+}).then(response => response.data));
+
 module.exports = {
     getMyUser,
-    getUsers
+    getUsers,
+    getUser
 };
