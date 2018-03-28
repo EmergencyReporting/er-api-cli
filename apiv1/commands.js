@@ -1,6 +1,6 @@
 const reduce = require('lodash.reduce');
 const { addFunction } = require('../parser');
-const { getMyUser, getUsers, getUser } = require('er-api-js/apiv1/v1Services');
+const { getMyUser, getUsers, getUser } = require('@ercorp/er-api-js/apiv1/v1Services');
 const columnify = require('columnify');
 
 const usersFormatting = users => Promise.resolve(reduce(users, (acc, { userID, fullName, email, primaryEmail, login }) => {
