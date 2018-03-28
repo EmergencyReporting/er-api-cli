@@ -1,9 +1,9 @@
 const reduce = require('lodash.reduce');
-const {addFunction} = require('../parser');
-const {getMyUser, getUsers, getUser} = require('./v1Services');
+const { addFunction } = require('../parser');
+const { getMyUser, getUsers, getUser } = require('er-api-js/apiv1/v1Services');
 const columnify = require('columnify');
 
-const usersFormatting = users => Promise.resolve(reduce(users, (acc, {userID, fullName, email, primaryEmail, login}) => {
+const usersFormatting = users => Promise.resolve(reduce(users, (acc, { userID, fullName, email, primaryEmail, login }) => {
     acc.push({
         Name: fullName,
         UserID: userID,
@@ -35,10 +35,10 @@ const addV1Functions = () => {
         command: 'v1Users',
         cmdRegEx: /^(\d*)$/,
         description: 'Gets the list of all users. Optionally provide the number of users to get. Defau' +
-                'lts to 5.',
+            'lts to 5.',
         cb: params => {
             const limit = parseInt(params[1] || '5', 10);
-            return getUsers({limit})
+            return getUsers({ limit })
                 .then(data => usersFormatting(data.users))
                 .then(formattedContent => {
                     console.log(formattedContent);

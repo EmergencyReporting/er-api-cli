@@ -10,10 +10,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "axios": "^0.18.0",
     "bluebird": "^3.5.1",
     "cli-parser": "^1.0.4",
     "columnify": "^1.5.4",
+    "er-api-js": "file:../er-api-js",
     "lodash.reduce": "^4.6.0"
   },
   "devDependencies": {

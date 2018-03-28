@@ -1,6 +1,8 @@
 const columnify = require('columnify');
-const {addFunction} = require('../parser');
-const {loadAuth, saveAuth, authInfo, getAuth} = require('./store');
+const { authInfo, getAuth } = require('er-api-js/auth/store');
+const { addFunction } = require('../parser');
+const { loadAuth, saveAuth } = require('./store');
+
 
 const addAuthFunctions = () => {
     addFunction({
