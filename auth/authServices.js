@@ -5,7 +5,7 @@ const env = {
 };
 
 const refreshAuthorization = (refresh_token, client_id, client_secret) => axios({
-    url: env.AUTH + '/Token.php',
+    url: `${env.AUTH}/Token.php`,
     method: 'post',
     data: {
         grant_type: 'refresh_token',
@@ -16,7 +16,7 @@ const refreshAuthorization = (refresh_token, client_id, client_secret) => axios(
 });
 
 const authorizePassword = (username, password, client_id, client_secret) => axios({
-    url: env.AUTH + '/Token.php',
+    url: `${env.AUTH}/Token.php`,
     method: 'post',
     data: {
         grant_type: 'password',

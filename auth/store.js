@@ -9,7 +9,6 @@ let authInfo = {};
 
 const loadAuth = () => readFile(authStore).then(contents => {
     authInfo = JSON.parse(contents);
-    console.log(authInfo);
     return authInfo;
 });
 
@@ -20,23 +19,25 @@ const saveAuth = () => {
 
 const getAuth = () => authInfo;
 
+const updateStoreInfo = ({access_token, refresh_token, expires_in}) => {
+    authInfo.refresh_token = refresh_token;
+    authInfo.access_token = access_token;
+    authInfo.goodUntil = Date.now() + ((expires_in - 300) * 1000);
+    return access_token;
+};
+
 const getAccessToken = () => {
     const now = Date.now();
     if (authInfo.goodUntil > now && authInfo.access_token) {
         return Promise.resolve(authInfo.access_token);
     }
 
-    // if (authInfo.refresh_token) {     return
-    // refreshAuthorization(authInfo.refresh_token, authInfo.client_id,
-    // authInfo.client_secret); }
+    if (authInfo.refresh_token) {
+        return refreshAuthorization(authInfo.refresh_token, authInfo.client_id, authInfo.client_secret).then(authResult => updateStoreInfo(authResult));
+    }
 
     if (authInfo.username && authInfo.password) {
-        return authorizePassword(authInfo.username, authInfo.password, authInfo.client_id, authInfo.client_secret).then(({access_token, refresh_token, expires_in}) => {
-            authInfo.refresh_token = refresh_token;
-            authInfo.access_token = access_token;
-            authInfo.goodUntil = Date.now() + ((expires_in - 300) * 1000);
-            return access_token;
-        });;
+        return authorizePassword(authInfo.username, authInfo.password, authInfo.client_id, authInfo.client_secret).then(authResult => updateStoreInfo(authResult));
     }
 
     return Promise.reject('Invalid auth info');
