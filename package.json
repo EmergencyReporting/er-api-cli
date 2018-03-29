@@ -1,6 +1,6 @@
 {
   "name": "@ercorp/er-api-cli",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Commandline Emergency Reporting API browser",
   "main": "index.js",
   "scripts": {
