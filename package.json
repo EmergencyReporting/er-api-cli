@@ -12,6 +12,10 @@
     "er": "./index.js"
   },
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/EmergencyReporting/er-api-cli.git"
+  },
   "dependencies": {
     "@ercorp/er-api-js": "^0.2.0",
     "bluebird": "^3.5.1",
