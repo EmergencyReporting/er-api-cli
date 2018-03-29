@@ -1,8 +1,7 @@
 const columnify = require('columnify');
-const { authInfo, getAuth } = require('@ercorp/er-api-js/auth/store');
-const { addFunction } = require('../parser');
-const { loadAuth, saveAuth } = require('./store');
-
+const {authInfo, getAuth} = require('@ercorp/er-api-js/auth/store');
+const {addFunction} = require('../parser');
+const {loadAuth, saveAuth} = require('./store');
 
 const addAuthFunctions = () => {
     addFunction({
@@ -51,7 +50,13 @@ const addAuthFunctions = () => {
         cb: () => Promise
             .resolve()
             .then(() => {
-                console.log(columnify((getAuth())));
+                let auth = {
+                    ...getAuth()
+                };
+                if (auth.password) {
+                    auth.password = '<hidden>';
+                }
+                console.log(columnify((auth)));
                 return true;
             })
     });
