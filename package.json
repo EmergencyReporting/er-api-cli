@@ -17,7 +17,7 @@
     "url": "https://github.com/EmergencyReporting/er-api-cli.git"
   },
   "dependencies": {
-    "@ercorp/er-api-js": "^0.2.0",
+    "@ercorp/er-api-js": "^0.3.0",
     "bluebird": "^3.5.1",
     "cli-parser": "^1.0.4",
     "columnify": "^1.5.4",
