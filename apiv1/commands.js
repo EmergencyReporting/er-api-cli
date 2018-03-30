@@ -1,9 +1,10 @@
 const reduce = require('lodash.reduce');
-const { addFunction } = require('../parser');
-const { getMyUser, getUsers, getUser } = require('@ercorp/er-api-js/apiv1/v1Services');
+const {addFunction} = require('../parser');
+const {getMyUser, getUsers, getUser} = require('@ercorp/er-api-js/apiv1/users');
+const {getStations} = require('@ercorp/er-api-js/apiv1/stations');
 const columnify = require('columnify');
 
-const usersFormatting = users => Promise.resolve(reduce(users, (acc, { userID, fullName, email, primaryEmail, login }) => {
+const usersFormatting = users => Promise.resolve(reduce(users, (acc, {userID, fullName, email, primaryEmail, login}) => {
     acc.push({
         Name: fullName,
         UserID: userID,
@@ -35,15 +36,36 @@ const addV1Functions = () => {
         command: 'v1Users',
         cmdRegEx: /^(\d*)$/,
         description: 'Gets the list of all users. Optionally provide the number of users to get. Defau' +
-            'lts to 5.',
+                'lts to 5.',
         cb: params => {
             const limit = parseInt(params[1] || '5', 10);
-            return getUsers({ limit })
+            return getUsers({limit})
                 .then(data => usersFormatting(data.users))
                 .then(formattedContent => {
                     console.log(formattedContent);
                     return true;
                 })
+        }
+    });
+    addFunction({
+        command: 'v1Stations',
+        cmdRegEx: /^(\d*)$/,
+        description: 'Gets the list of all Stations. Optionally provide the number of users to get. De' +
+                'faults to 5.',
+        cb: params => {
+            const limit = parseInt(params[1] || '5', 10);
+            return getStations({limit}).then(data => {
+                if (data.stations) {
+                    const stationsSummaries = reduce(data.stations, (acc, {stationID, stationNumber, stationName}) => {
+                        acc.push({stationID, stationNumber, stationName});
+                        return acc;
+                    }, []);
+                    console.log(columnify(stationsSummaries));
+                } else {
+                    console.log('No stations returned.');
+                };
+                return data;
+            });
         }
     });
 };
