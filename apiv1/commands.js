@@ -2,6 +2,7 @@ const reduce = require('lodash.reduce');
 const {addFunction} = require('../parser');
 const {getMyUser, getUsers, getUser} = require('@ercorp/er-api-js/apiv1/users');
 const {getStations} = require('@ercorp/er-api-js/apiv1/stations');
+const {getApparatuses} = require('@ercorp/er-api-js/apiv1/apparatus');
 const columnify = require('columnify');
 
 const usersFormatting = users => Promise.resolve(reduce(users, (acc, {userID, fullName, email, primaryEmail, login}) => {
@@ -45,6 +46,41 @@ const addV1Functions = () => {
                     console.log(formattedContent);
                     return true;
                 })
+        }
+    });
+    addFunction({
+        command: 'v1Apparatuses',
+        cmdRegEx: /^(\d*)$/,
+        description: 'Gets the list of all apparatus. Optionally provide the maximum number to get. De' +
+                'faults to maximum of 5.',
+        cb: params => {
+            const limit = parseInt(params[1] || '5', 10);
+            return getApparatuses({limit}).then(data => {
+                if (data.apparatuses) {
+                    const apparatusSummaries = reduce(data.apparatuses, (acc, {
+                        departmentApparatusID,
+                        apparatusID,
+                        stationName,
+                        stationNumber,
+                        vehicleNumber,
+                        archive
+                    }) => {
+                        acc.push({
+                            apparatusID,
+                            departmentApparatusID,
+                            stationName,
+                            stationNumber,
+                            vehicleNumber,
+                            archive
+                        });
+                        return acc;
+                    }, []);
+                    console.log(columnify(apparatusSummaries));
+                } else {
+                    console.log('No Apparatus returned.');
+                }
+                return data;
+            })
         }
     });
     addFunction({
