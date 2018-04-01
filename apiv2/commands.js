@@ -1,11 +1,12 @@
 const reduce = require('lodash.reduce');
 const {addFunction} = require('../parser');
 const {getRosters} = require('@ercorp/er-api-js/apiv2/rosters');
-const {getEvents} = require('@ercorp/er-api-js/apiv2/events');
 const {getInspections} = require('@ercorp/er-api-js/apiv2/inspections');
 const columnify = require('columnify');
+const {addV2EventFunctions} = require('./eventCommands');
 
 const addV2Functions = () => {
+    addV2EventFunctions();
     addFunction({
         command: 'v2Rosters',
         cmdRegEx: /^(\d*)\s?(.*)$/,
@@ -44,45 +45,6 @@ const addV2Functions = () => {
                     console.log('No Rosters returned.');
                 };
                 return data;
-            });
-        }
-    });
-    addFunction({
-        command: 'v2Events',
-        cmdRegEx: /^(.*)$/,
-        description: 'Gets a list of Events. Uses the optional format search|offset|limit|filter|order' +
-                'by|rowVersionDefaults to 5 events.',
-        cb: params => {
-            const splitParams = (params[1] || '').split('|');
-            let queryParams = {};
-            if (splitParams[0]) {
-                queryParams.search = splitParams[0];
-            }
-            if (splitParams[1]) {
-                queryParams.offset = splitParams[1];
-            }
-            queryParams.limit = parseInt(splitParams[2] || '5', 10);
-
-            if (splitParams[3]) {
-                queryParams.filter = splitParams[3];
-            }
-            if (splitParams[4]) {
-                queryParams.orderby = splitParams[4];
-            }
-            if (splitParams[5]) {
-                queryParams.rowVersion = splitParams[5];
-            }
-
-            return getEvents(queryParams).then(data => {
-                if (data.events) {
-                    const eventSummaries = reduce(data.events, (acc, {eventsID, eventDate, eventEndDate, eventName, rowVersion}) => {
-                        acc.push({eventsID, eventDate, eventEndDate, eventName, rowVersion});
-                        return acc;
-                    }, []);
-                    console.log(columnify(eventSummaries));
-                } else {
-                    console.log('No Events returned.');
-                };
             });
         }
     });

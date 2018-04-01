@@ -46,6 +46,21 @@ const addAuthFunctions = () => {
             })
     });
     addFunction({
+        command: 'AuthTime',
+        cb: data => Promise
+            .resolve(getAuth())
+            .then(auth => {
+                if (auth.goodUntil) {
+                    const msRemaining = auth.goodUntil - Date.now();
+                    console.log(`Time remaining ${msRemaining / 1000 / 60} minutes`);
+                } else {
+                    console.log('Token time remaining not set.');
+                }
+                auth.password = data[1];
+                return true;
+            })
+    });
+    addFunction({
         command: 'PrintAuth',
         cb: () => Promise
             .resolve()
