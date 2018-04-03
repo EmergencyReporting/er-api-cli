@@ -1,6 +1,7 @@
 const {addFunction} = require('../parser');
-const {getApparatuses, getApparatus} = require('@ercorp/er-api-js/apiv2/apparatus');
+const {getAllApparatus, getApparatus, getAllApparatusCompartments, getAllApparatusCrews, getApparatusMaintenances} = require('@ercorp/er-api-js/apiv2/apparatus');
 const columnify = require('columnify');
+const {splitParams, addParamIfPresent} = require('./splitParams');
 
 const addV2Apparatus = () => {
     addFunction({
@@ -9,24 +10,15 @@ const addV2Apparatus = () => {
         description: 'Gets a list of apparatus. Uses the optional format offset|limit|filter|orderby|r' +
                 'owVersionDefaults to 5 apparatus.',
         cb: params => {
-            const splitParams = (params[1] || '').split('|');
+            const sp = splitParams(params[1]);
             let queryParams = {};
-            if (splitParams[0]) {
-                queryParams.offset = splitParams[0];
-            }
-            queryParams.limit = parseInt(splitParams[1] || '5', 10);
+            addParamIfPresent(queryParams, sp, 'offset', 0);
+            queryParams.limit = parseInt(sp[1] || '5', 10);
+            addParamIfPresent(queryParams, sp, 'filter', 2);
+            addParamIfPresent(queryParams, sp, 'orderby', 3);
+            addParamIfPresent(queryParams, sp, 'rowVersion', 4);
 
-            if (splitParams[2]) {
-                queryParams.filter = splitParams[2];
-            }
-            if (splitParams[3]) {
-                queryParams.orderby = splitParams[3];
-            }
-            if (splitParams[4]) {
-                queryParams.rowVersion = splitParams[4];
-            }
-
-            return getApparatuses(queryParams).then(data => {
+            return getAllApparatus(queryParams).then(data => {
                 if (data.apparatus && data.apparatus.length > 0) {
                     const apparatusSummaries = data
                         .apparatus
@@ -66,6 +58,77 @@ const addV2Apparatus = () => {
                     console.log('No apparatus info');
                 }
                 return data;
+            });
+        }
+    });
+
+    addFunction({
+        command: 'v2AllApparatusCrews',
+        cmdRegEx: /^(.*)$/,
+        description: 'Gets a list of crews on all apparatus. Uses the optional format offset|limit|fil' +
+                'ter|orderby|rowVersionDefaults to 5 apparatus.',
+        cb: params => {
+            const sp = splitParams(params[1]);
+            let queryParams = {};
+            addParamIfPresent(queryParams, sp, 'offset', 0);
+            queryParams.limit = parseInt(sp[1] || '5', 10);
+            addParamIfPresent(queryParams, sp, 'filter', 2);
+            addParamIfPresent(queryParams, sp, 'orderby', 3);
+            addParamIfPresent(queryParams, sp, 'rowVersion', 4);
+
+            return getAllApparatusCrews(queryParams).then(data => {
+                if (data.crews && data.crews.length > 0) {
+                    const crewSummaries = data
+                        .apparatus
+                        .map(({crewID, departmentApparatusID, rowVersion}) => ({crewID, departmentApparatusID, rowVersion}));
+                    console.log(columnify(crewSummaries));
+                } else {
+                    console.log('No crews returned.');
+                };
+            });
+        }
+    });
+
+    addFunction({
+        command: 'v2AppMain',
+        cmdRegEx: /^(\d+)(.*)$/,
+        description: 'Gets a list of maintenaces for an apparatus. Uses the optional format offset|lim' +
+                'it|filter|orderby|rowVersionDefaults to 5 apparatus.',
+        cb: params => {
+            const departmentApparatusID = parseInt(params[1], 10);
+            const sp = splitParams(params[2]);
+            let queryParams = {};
+            addParamIfPresent(queryParams, sp, 'offset', 0);
+            queryParams.limit = parseInt(sp[1] || '5', 10);
+            addParamIfPresent(queryParams, sp, 'filter', 2);
+            addParamIfPresent(queryParams, sp, 'orderby', 3);
+            addParamIfPresent(queryParams, sp, 'rowVersion', 4);
+
+            return getApparatusMaintenances(departmentApparatusID, queryParams).then(data => {
+                if (data.maintenance && data.maintenance.length > 0) {
+                    const maintenanceSummaries = data
+                        .maintenance
+                        .map(({
+                            maintenanceID,
+                            requestedByUserID,
+                            requestMaintenanceDate,
+                            scheduledDate,
+                            scheduledByUserID,
+                            doneByUserID,
+                            rowVersion
+                        }) => ({
+                            maintenanceID,
+                            requestedByUserID,
+                            requestMaintenanceDate,
+                            scheduledDate,
+                            scheduledByUserID,
+                            doneByUserID,
+                            rowVersion
+                        }));
+                    console.log(columnify(maintenanceSummaries));
+                } else {
+                    console.log('No crews returned.');
+                };
             });
         }
     });
