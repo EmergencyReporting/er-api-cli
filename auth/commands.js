@@ -52,7 +52,7 @@ const addAuthFunctions = () => {
             .then(auth => {
                 if (auth.goodUntil) {
                     const msRemaining = auth.goodUntil - Date.now();
-                    console.log(`Time remaining ${msRemaining / 1000 / 60} minutes`);
+                    console.log(`Time remaining ${ (msRemaining / 1000 / 60).toFixed(2)} minutes`);
                 } else {
                     console.log('Token time remaining not set.');
                 }

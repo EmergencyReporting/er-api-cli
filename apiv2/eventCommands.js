@@ -1,4 +1,3 @@
-const reduce = require('lodash.reduce');
 const {addFunction} = require('../parser');
 const {getEvents, getEventsPeoples, getEvent, getEventPeoples} = require('@ercorp/er-api-js/apiv2/events');
 const columnify = require('columnify');
@@ -31,11 +30,10 @@ const addV2EventFunctions = () => {
             }
 
             return getEvents(queryParams).then(data => {
-                if (data.events) {
-                    const eventSummaries = reduce(data.events, (acc, {eventsID, eventDate, eventEndDate, eventName, rowVersion}) => {
-                        acc.push({eventsID, eventDate, eventEndDate, eventName, rowVersion});
-                        return acc;
-                    }, []);
+                if (data.events && data.events.length) {
+                    const eventSummaries = data
+                        .events
+                        .map(({eventsID, eventDate, eventEndDate, eventName, rowVersion}) => ({eventsID, eventDate, eventEndDate, eventName, rowVersion}));
                     console.log(columnify(eventSummaries));
                 } else {
                     console.log('No Events returned.');
@@ -67,25 +65,24 @@ const addV2EventFunctions = () => {
             }
 
             return getEventsPeoples(queryParams).then(data => {
-                if (data.eventPeople) {
-                    const eventPeoples = reduce(data.eventPeople, (acc, {
-                        eventID,
-                        eventPersonID,
-                        userID,
-                        firstName,
-                        lastName,
-                        rowVersion
-                    }) => {
-                        acc.push({
+                if (data.eventPeople && data.eventPeople.length) {
+                    const eventPeoples = data
+                        .eventPeople
+                        .map(({
                             eventID,
                             eventPersonID,
                             userID,
                             firstName,
                             lastName,
                             rowVersion
-                        });
-                        return acc;
-                    }, []);
+                        }) => ({
+                            eventID,
+                            eventPersonID,
+                            userID,
+                            firstName,
+                            lastName,
+                            rowVersion
+                        }));
                     console.log(columnify(eventPeoples));
                 } else {
                     console.log('No Events Peoples returned.');
@@ -116,17 +113,10 @@ const addV2EventFunctions = () => {
         cb: params => {
             const eventId = parseInt(params[1], 10);
             return getEventPeoples(eventId).then(data => {
-                if (data.eventPeople) {
-                    const eventPeoples = reduce(data.eventPeople, (acc, {
-                        eventPersonID,
-                        userID,
-                        firstName,
-                        lastName,
-                        hours,
-                        points,
-                        rowVersion
-                    }) => {
-                        acc.push({
+                if (data.eventPeople && data.eventPeople.length) {
+                    const eventPeoples = data
+                        .eventPeople
+                        .map(({
                             eventPersonID,
                             userID,
                             firstName,
@@ -134,9 +124,15 @@ const addV2EventFunctions = () => {
                             hours,
                             points,
                             rowVersion
-                        });
-                        return acc;
-                    }, []);
+                        }) => ({
+                            eventPersonID,
+                            userID,
+                            firstName,
+                            lastName,
+                            hours,
+                            points,
+                            rowVersion
+                        }));
                     console.log(columnify(eventPeoples));
                 } else {
                     console.log('No Events Peoples returned.');

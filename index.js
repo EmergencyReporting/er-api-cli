@@ -5,6 +5,7 @@ const {addAuthFunctions} = require('./auth/commands');
 const {addV1Functions} = require('./apiv1/commands');
 const {addV2Functions} = require('./apiv2/commands');
 const {addGeneralFunctions} = require('./commands');
+const {startTime, timeElapsed} = require('./util');
 
 const rl = readline.createInterface({input: process.stdin, output: process.stdout});
 const lineProcessor = prompt => Promise.fromCallback(callback => {
@@ -20,10 +21,13 @@ async function processQuestionAnswerAsync() {
     let output;
     while (output !== 'QUIT') {
         output = await lineProcessor('>');
+        const measurement = startTime();
         output = await parse(output).catch(err => {
             console.error(err);
             return output;
         });
+        const measureElapsed = timeElapsed(measurement);
+        console.log(`Execution Time: ${measureElapsed} seconds`);
     }
 }
 

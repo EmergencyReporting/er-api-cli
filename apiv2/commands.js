@@ -4,9 +4,11 @@ const {getRosters} = require('@ercorp/er-api-js/apiv2/rosters');
 const {getInspections} = require('@ercorp/er-api-js/apiv2/inspections');
 const columnify = require('columnify');
 const {addV2EventFunctions} = require('./eventCommands');
+const {addV2Apparatus} = require('./apparatus');
 
 const addV2Functions = () => {
     addV2EventFunctions();
+    addV2Apparatus();
     addFunction({
         command: 'v2Rosters',
         cmdRegEx: /^(\d*)\s?(.*)$/,

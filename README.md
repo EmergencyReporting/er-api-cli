@@ -2,16 +2,17 @@
 
 A commandline (CLI) app to interact with your Emergency Reporting data.
 
-## Development
+## CLI App usage
 
-### Getting the Code
+### Installation
+Install NodeJS and run the following commands.
 ```
-git clone ssh://git@stash.emergencyreporting.com:7999/~gabe/er-cli.git
-git clone ssh://git@stash.emergencyreporting.com:7999/~gabe/er-api-js.git
+npm install @ercorp/er-api-cli
 ```
 
 ### Running the app
-TODO - how would I do a global npm install and then be able to use the tool via er-cli.
+
+See [Commands](./commands.md) link for additional details.
 
 ```
 npm start
