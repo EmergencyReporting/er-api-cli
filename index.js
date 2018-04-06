@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const readline = require('readline');
 const Promise = require('bluebird');
 const {parse} = require('./parser');
@@ -6,6 +8,7 @@ const {addV1Functions} = require('./apiv1/commands');
 const {addV2Functions} = require('./apiv2/commands');
 const {addGeneralFunctions} = require('./commands');
 const {startTime, timeElapsed} = require('./util');
+const {loadAuth} = require('./auth/store');
 
 const rl = readline.createInterface({input: process.stdin, output: process.stdout});
 const lineProcessor = prompt => Promise.fromCallback(callback => {
@@ -19,6 +22,7 @@ addGeneralFunctions(rl);
 
 async function processQuestionAnswerAsync() {
     let output;
+    await loadAuth();
     while (output !== 'QUIT') {
         output = await lineProcessor('>');
         const measurement = startTime();

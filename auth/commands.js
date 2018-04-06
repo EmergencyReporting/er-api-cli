@@ -1,49 +1,28 @@
 const columnify = require('columnify');
-const {authInfo, getAuth} = require('@ercorp/er-api-js/auth/store');
+const {getAuth, updateStoreInfo} = require('@ercorp/er-api-js/auth/store');
 const {addFunction} = require('../parser');
-const {loadAuth, saveAuth} = require('./store');
 
 const addAuthFunctions = () => {
     addFunction({
         command: 'SetClientID',
         description: 'Sets the Client ID',
         cmdRegEx: /^(.*)$/,
-        cb: data => Promise
-            .resolve()
-            .then(() => {
-                getAuth().client_id = data[1];
-                return true;
-            })
+        cb: data => updateStoreInfo({client_id: data[1]})
     });
     addFunction({
         command: 'SetClientSecret',
         cmdRegEx: /^(.*)$/,
-        cb: data => Promise
-            .resolve()
-            .then(() => {
-                getAuth().client_secret = data[1];
-                return true;
-            })
+        cb: data => updateStoreInfo({client_secret: data[1]})
     });
     addFunction({
         command: 'SetUser',
         cmdRegEx: /^(.*)$/,
-        cb: data => Promise
-            .resolve()
-            .then(() => {
-                getAuth().username = data[1];
-                return true;
-            })
+        cb: data => updateStoreInfo({username: data[1]})
     });
     addFunction({
         command: 'SetPassword',
         cmdRegEx: /^(.*)$/,
-        cb: data => Promise
-            .resolve()
-            .then(() => {
-                getAuth().password = data[1];
-                return true;
-            })
+        cb: data => updateStoreInfo({username: data[1]})
     });
     addFunction({
         command: 'AuthTime',
@@ -74,14 +53,6 @@ const addAuthFunctions = () => {
                 console.log(columnify((auth)));
                 return true;
             })
-    });
-    addFunction({
-        command: 'LoadAuth',
-        cb: () => loadAuth()
-    });
-    addFunction({
-        command: 'SaveAuth',
-        cb: () => saveAuth()
     });
 };
 
