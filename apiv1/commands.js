@@ -3,6 +3,7 @@ const {addFunction} = require('../parser');
 const {getMyUser, getUsers, getUser} = require('@ercorp/er-api-js/apiv1/users');
 const {getStations} = require('@ercorp/er-api-js/apiv1/stations');
 const {getApparatuses} = require('@ercorp/er-api-js/apiv1/apparatus');
+const {addV1Equipment} = require('./equipment');
 const columnify = require('columnify');
 
 const usersFormatting = users => Promise.resolve(reduce(users, (acc, {userID, fullName, email, primaryEmail, login}) => {
@@ -16,6 +17,8 @@ const usersFormatting = users => Promise.resolve(reduce(users, (acc, {userID, fu
 }, [])).then(entries => columnify(entries, ['Name', 'UserID', 'Login', 'Email']));
 
 const addV1Functions = () => {
+    addV1Equipment();
+
     addFunction({
         command: 'v1User',
         description: 'Gets a specific users information by id',

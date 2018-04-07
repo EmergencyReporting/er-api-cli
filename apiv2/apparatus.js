@@ -1,7 +1,7 @@
 const {addFunction} = require('../parser');
 const {getAllApparatus, getApparatus, getAllApparatusCompartments, getAllApparatusCrews, getApparatusMaintenances} = require('@ercorp/er-api-js/apiv2/apparatus');
 const columnify = require('columnify');
-const {splitParams, addParamIfPresent} = require('./splitParams');
+const {splitParams, addParamIfPresent} = require('../util');
 
 const addV2Apparatus = () => {
     addFunction({
