@@ -10,7 +10,7 @@ const readAuthContents = () => readFile(authStore)
     .then(contents => JSON.parse(contents))
     .catch(() => {});
 
-const loadAuth = () => readAuthContents().then(contents => updateAuthInfo(contents));
+const loadAuth = () => readAuthContents().then(contents => updateAuthInfo(contents || {}));
 
 addAuthUpdateListener(newAuthContents => {
     readAuthContents().then(storedAuth => {
