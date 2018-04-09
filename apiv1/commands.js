@@ -1,5 +1,6 @@
 const reduce = require('lodash.reduce');
 const {addFunction} = require('../parser');
+const {getMyAccount} = require('@ercorp/er-api-js/apiv1/accounts');
 const {getMyUser, getUsers, getUser} = require('@ercorp/er-api-js/apiv1/users');
 const {getStations} = require('@ercorp/er-api-js/apiv1/stations');
 const {getApparatuses} = require('@ercorp/er-api-js/apiv1/apparatus');
@@ -18,7 +19,14 @@ const usersFormatting = users => Promise.resolve(reduce(users, (acc, {userID, fu
 
 const addV1Functions = () => {
     addV1Equipment();
-
+    addFunction({
+        command: 'v1AccountsMe',
+        description: 'Gets the logged in users account information.',
+        cb: params => getMyAccount().then(data => {
+            console.log(columnify(data.account));
+            return true;
+        })
+    });
     addFunction({
         command: 'v1User',
         description: 'Gets a specific users information by id',
