@@ -1,8 +1,7 @@
 const Promise = require('bluebird');
 const columnify = require('columnify');
 const {addFunction, listCommands} = require('./parser');
-const {setAuthEnv} = require('@ercorp/er-api-js/auth/authServices');
-const {updateStoreInfo} = require('@ercorp/er-api-js/auth/store');
+const {updateAuthInfo} = require('@ercorp/er-api-js/auth/store');
 
 const addGeneralFunctions = (rl) => {
     addFunction({
@@ -30,7 +29,7 @@ const addGeneralFunctions = (rl) => {
                 };
                 console.log(uris);
 
-                updateStoreInfo({authUrl: uris.auth, apiUrl: uris.api});
+                updateAuthInfo({authUrl: uris.auth, apiUrl: uris.api});
 
                 return uris;
             })
