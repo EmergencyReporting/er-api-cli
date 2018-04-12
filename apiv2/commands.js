@@ -1,21 +1,23 @@
 const reduce = require('lodash.reduce');
-const {addFunction} = require('../parser');
-const {getRosters} = require('@ercorp/er-api-js/apiv2/rosters');
-const {getInspections} = require('@ercorp/er-api-js/apiv2/inspections');
+const { addFunction } = require('../parser');
+const { getRosters } = require('@ercorp/er-api-js/apiv2/rosters');
+const { getInspections } = require('@ercorp/er-api-js/apiv2/inspections');
 const columnify = require('columnify');
-const {addV2Apparatus} = require('./apparatus');
-const {addV2EventFunctions} = require('./events');
-const {addV2Equipment} = require('./equipment');
+const { addV2Apparatus } = require('./apparatus');
+const { addV2EventFunctions } = require('./events');
+const { addV2Equipment } = require('./equipment');
+const { addV2ExposuresFunctions } = require('./exposures');
 
 const addV2Functions = () => {
     addV2EventFunctions();
     addV2Apparatus();
     addV2Equipment();
+    addV2ExposuresFunctions();
     addFunction({
         command: 'v2Rosters',
         cmdRegEx: /^(\d*)\s?(.*)$/,
         description: 'Gets a list of rosters. Optionally provide the number of rosters to get and a fi' +
-                'lter by clause. Defaults to 5 rosters without a filter.',
+            'lter by clause. Defaults to 5 rosters without a filter.',
         cb: params => {
             const limit = parseInt(params[1] || '5', 10);
             let queryParams = {
@@ -56,7 +58,7 @@ const addV2Functions = () => {
         command: 'v2Inspections',
         cmdRegEx: /^(.*)$/,
         description: 'Gets a list of Inspections. Uses the optional format offset|limit|filter|orderby' +
-                '|rowVersionDefaults to 5 events.',
+            '|rowVersionDefaults to 5 events.',
         cb: params => {
             const splitParams = (params[1] || '').split('|');
             let queryParams = {};
