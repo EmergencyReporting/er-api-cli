@@ -1,7 +1,7 @@
 const {addFunction} = require('../parser');
 const {getAllApparatus, getApparatus, getAllApparatusCompartments, getAllApparatusCrews, getApparatusMaintenances} = require('@ercorp/er-api-js/apiv2/apparatus');
 const columnify = require('columnify');
-const {splitParams, addParamIfPresent} = require('../util');
+const {splitParams, addParamIfPresent, formatFiltered} = require('../util');
 
 const addV2Apparatus = () => {
     addFunction({
@@ -19,28 +19,15 @@ const addV2Apparatus = () => {
             addParamIfPresent(queryParams, sp, 'rowVersion', 4);
 
             return getAllApparatus(queryParams).then(data => {
-                if (data.apparatus && data.apparatus.length > 0) {
-                    const apparatusSummaries = data
-                        .apparatus
-                        .map(({
-                            departmentApparatusID,
-                            apparatusID,
-                            apparatusOwnership,
-                            inService,
-                            dateInService,
-                            rowVersion
-                        }) => ({
-                            departmentApparatusID,
-                            apparatusID,
-                            apparatusOwnership,
-                            inService,
-                            dateInService,
-                            rowVersion
-                        }));
-                    console.log(columnify(apparatusSummaries));
-                } else {
-                    console.log('No Apparatus returned.');
-                };
+                console.log(formatFiltered(data.apparatus, [
+                    'departmentApparatusID',
+                    'apparatusID',
+                    'apparatusOwnership',
+                    'inService',
+                    'dateInService',
+                    'rowVersion'
+                ], columnify, 'No Apparatus returned.'));
+                return data.apparatus;
             });
         }
     });
@@ -77,14 +64,10 @@ const addV2Apparatus = () => {
             addParamIfPresent(queryParams, sp, 'rowVersion', 4);
 
             return getAllApparatusCrews(queryParams).then(data => {
-                if (data.crews && data.crews.length > 0) {
-                    const crewSummaries = data
-                        .apparatus
-                        .map(({crewID, departmentApparatusID, rowVersion}) => ({crewID, departmentApparatusID, rowVersion}));
-                    console.log(columnify(crewSummaries));
-                } else {
-                    console.log('No crews returned.');
-                };
+                console.log(formatFiltered(data.crews, [
+                    'crewID', 'departmentApparatusID', 'rowVersion'
+                ], columnify, 'No crews returned.'));
+                return data.crews;
             });
         }
     });
@@ -105,30 +88,16 @@ const addV2Apparatus = () => {
             addParamIfPresent(queryParams, sp, 'rowVersion', 4);
 
             return getApparatusMaintenances(departmentApparatusID, queryParams).then(data => {
-                if (data.maintenance && data.maintenance.length > 0) {
-                    const maintenanceSummaries = data
-                        .maintenance
-                        .map(({
-                            maintenanceID,
-                            requestedByUserID,
-                            requestMaintenanceDate,
-                            scheduledDate,
-                            scheduledByUserID,
-                            doneByUserID,
-                            rowVersion
-                        }) => ({
-                            maintenanceID,
-                            requestedByUserID,
-                            requestMaintenanceDate,
-                            scheduledDate,
-                            scheduledByUserID,
-                            doneByUserID,
-                            rowVersion
-                        }));
-                    console.log(columnify(maintenanceSummaries));
-                } else {
-                    console.log('No crews returned.');
-                };
+                console.log(formatFiltered(data.maintenance, [
+                    'maintenanceID',
+                    'requestedByUserID',
+                    'requestMaintenanceDate',
+                    'scheduledDate',
+                    'scheduledByUserID',
+                    'doneByUserID',
+                    'rowVersion'
+                ], columnify, 'No maintenance for apparatus returned.'));
+                return data.maintenance;
             });
         }
     });

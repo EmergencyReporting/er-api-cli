@@ -1,7 +1,7 @@
 const {addFunction} = require('../parser');
 const {getEvents, getEventsPeoples, getEvent, getEventPeoples} = require('@ercorp/er-api-js/apiv2/events');
 const columnify = require('columnify');
-const {splitParams, addParamIfPresent} = require('../util');
+const {splitParams, addParamIfPresent, formatFiltered} = require('../util');
 
 const addV2EventFunctions = () => {
     addFunction({
@@ -20,14 +20,10 @@ const addV2EventFunctions = () => {
             addParamIfPresent(queryParams, sp, 'rowVersion', 5);
 
             return getEvents(queryParams).then(data => {
-                if (data.events && data.events.length) {
-                    const eventSummaries = data
-                        .events
-                        .map(({eventsID, eventDate, eventEndDate, eventName, rowVersion}) => ({eventsID, eventDate, eventEndDate, eventName, rowVersion}));
-                    console.log(columnify(eventSummaries));
-                } else {
-                    console.log('No Events returned.');
-                };
+                console.log(formatFiltered(data.events, [
+                    'eventsID', 'eventDate', 'eventEndDate', 'eventName', 'rowVersion'
+                ], columnify, 'No Events returned.'));
+                return data.events;
             });
         }
     });
@@ -46,28 +42,15 @@ const addV2EventFunctions = () => {
             addParamIfPresent(queryParams, sp, 'rowVersion', 4);
 
             return getEventsPeoples(queryParams).then(data => {
-                if (data.eventPeople && data.eventPeople.length) {
-                    const eventPeoples = data
-                        .eventPeople
-                        .map(({
-                            eventID,
-                            eventPersonID,
-                            userID,
-                            firstName,
-                            lastName,
-                            rowVersion
-                        }) => ({
-                            eventID,
-                            eventPersonID,
-                            userID,
-                            firstName,
-                            lastName,
-                            rowVersion
-                        }));
-                    console.log(columnify(eventPeoples));
-                } else {
-                    console.log('No Events Peoples returned.');
-                };
+                console.log(formatFiltered(data.eventPeople, [
+                    'eventID',
+                    'eventPersonID',
+                    'userID',
+                    'firstName',
+                    'lastName',
+                    'rowVersion'
+                ], columnify, 'No Events Peoples returned.'));
+                return data.eventPeople;
             });
         }
     });
@@ -83,10 +66,11 @@ const addV2EventFunctions = () => {
                 } else {
                     console.log('No event info');
                 }
-                return data;
+                return data.event;
             });
         }
     });
+
     addFunction({
         command: 'v2EventPeoples',
         cmdRegEx: /^(\d+)$/,
@@ -94,31 +78,16 @@ const addV2EventFunctions = () => {
         cb: params => {
             const eventId = parseInt(params[1], 10);
             return getEventPeoples(eventId).then(data => {
-                if (data.eventPeople && data.eventPeople.length) {
-                    const eventPeoples = data
-                        .eventPeople
-                        .map(({
-                            eventPersonID,
-                            userID,
-                            firstName,
-                            lastName,
-                            hours,
-                            points,
-                            rowVersion
-                        }) => ({
-                            eventPersonID,
-                            userID,
-                            firstName,
-                            lastName,
-                            hours,
-                            points,
-                            rowVersion
-                        }));
-                    console.log(columnify(eventPeoples));
-                } else {
-                    console.log('No Events Peoples returned.');
-                };
-                return data;
+                console.log(formatFiltered(data.eventPeople, [
+                    'eventPersonID',
+                    'userID',
+                    'firstName',
+                    'lastName',
+                    'hours',
+                    'points',
+                    'rowVersion'
+                ], columnify, 'No Events Peoples returned.'));
+                return data.eventPeople;
             });
         }
     });

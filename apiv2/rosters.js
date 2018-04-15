@@ -1,7 +1,7 @@
 const {addFunction} = require('../parser');
 const {getRosters, createRoster, deleteRoster} = require('@ercorp/er-api-js/apiv2/rosters');
 const columnify = require('columnify');
-const {splitParams, addParamIfPresent} = require('../util');
+const {splitParams, addParamIfPresent, formatFiltered} = require('../util');
 
 const addV2Rosters = () => {
     addFunction({
@@ -52,29 +52,15 @@ const addV2Rosters = () => {
             addParamIfPresent(queryParams, sp, 'rowVersion', 4);
 
             return getRosters(queryParams).then(data => {
-                if (data.rosters && data.rosters.length) {
-                    const rosterSummaries = data
-                        .rosters
-                        .map(({
-                            rosterID,
-                            rosterName,
-                            defaultStartTime,
-                            defaultEndTime,
-                            shiftID,
-                            narrative
-                        }) => ({
-                            rosterID,
-                            rosterName,
-                            defaultStartTime,
-                            defaultEndTime,
-                            shiftID,
-                            narrative
-                        }));
-                    console.log(columnify(rosterSummaries));
-                } else {
-                    console.log('No Rosters returned.');
-                };
-                return data;
+                console.log(formatFiltered(data.rosters, [
+                    'rosterID',
+                    'rosterName',
+                    'defaultStartTime',
+                    'defaultEndTime',
+                    'shiftID',
+                    'narrative'
+                ], columnify, 'No Rosters returned.'));
+                return data.rosters;
             });
         }
     });

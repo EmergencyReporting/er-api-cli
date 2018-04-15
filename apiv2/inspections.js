@@ -1,7 +1,7 @@
 const {addFunction} = require('../parser');
 const {getInspections} = require('@ercorp/er-api-js/apiv2/inspections');
 const columnify = require('columnify');
-const {splitParams, addParamIfPresent} = require('../util');
+const {splitParams, addParamIfPresent, formatFiltered} = require('../util');
 
 const addV2Inspections = () => {
     addFunction({
@@ -19,32 +19,17 @@ const addV2Inspections = () => {
             addParamIfPresent(queryParams, sp, 'rowVersion', 4);
 
             return getInspections(queryParams).then(data => {
-                if (data.inspections && data.inspections.length) {
-                    const inspectionSummaries = data
-                        .inspections
-                        .map(({
-                            inspectionID,
-                            inspectorUserID,
-                            occupancyID,
-                            inspectionDate,
-                            locked,
-                            inspectionType,
-                            formID,
-                            rowVersion
-                        }) => ({
-                            inspectionID,
-                            inspectorUserID,
-                            occupancyID,
-                            inspectionDate,
-                            locked,
-                            inspectionType,
-                            formID,
-                            rowVersion
-                        }));
-                    console.log(columnify(inspectionSummaries));
-                } else {
-                    console.log('No inspections returned.');
-                };
+                console.log(formatFiltered(data.inspections, [
+                    'inspectionID',
+                    'inspectorUserID',
+                    'occupancyID',
+                    'inspectionDate',
+                    'locked',
+                    'inspectionType',
+                    'formID',
+                    'rowVersion'
+                ], columnify, 'No inspections returned.'));
+                return data.inspections;
             });
         }
     });

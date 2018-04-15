@@ -11,5 +11,22 @@ module.exports = {
         if (paramSource[paramIndex]) {
             paramTarget[targetName] = paramSource[paramIndex];
         }
+    },
+
+    formatFiltered: (coll, fields, successFormatter, failedMessage) => {
+        let output = failedMessage;
+        if (coll && coll.length) {
+            const filteredCol = coll.map(entry => {
+                let obj = {};
+                fields.forEach(fieldName => {
+                    obj[fieldName] = entry[fieldName];
+                });
+                return obj;
+            });
+            output = successFormatter
+                ? successFormatter(filteredCol)
+                : filteredCol;
+        }
+        return output;
     }
 };

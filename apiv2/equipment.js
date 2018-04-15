@@ -1,7 +1,7 @@
 const {addFunction} = require('../parser');
 const {getAllEquipment, getEquipment, getAllEquipmentMaintenances} = require('@ercorp/er-api-js/apiv2/equipment');
 const columnify = require('columnify');
-const {splitParams, addParamIfPresent} = require('../util');
+const {splitParams, addParamIfPresent, formatFiltered} = require('../util');
 
 const addV2Equipment = () => {
     addFunction({
@@ -19,15 +19,10 @@ const addV2Equipment = () => {
             addParamIfPresent(queryParams, sp, 'rowVersion', 4);
 
             return getAllEquipment(queryParams).then(data => {
-                if (data.equipment && data.equipment.length > 0) {
-                    const equipmentSummaries = data
-                        .equipment
-                        .map(({equipmentID, inService, categoryID, equipmentType, rowVersion}) => ({equipmentID, inService, categoryID, equipmentType, rowVersion}));
-                    console.log(columnify(equipmentSummaries));
-                } else {
-                    console.log('No equipment returned.');
-                };
-                return data;
+                console.log(formatFiltered(data.equipment, [
+                    'equipmentID', 'inService', 'categoryID', 'equipmentType', 'rowVersion'
+                ], columnify, 'No equipment returned.'));
+                return data.equipment;
             });
         }
     });
@@ -64,14 +59,10 @@ const addV2Equipment = () => {
             addParamIfPresent(queryParams, sp, 'rowVersion', 4);
 
             return getAllEquipmentMaintenances(queryParams).then(data => {
-                if (data.maintenance && data.maintenance.length > 0) {
-                    const mainSummaries = data
-                        .maintenance
-                        .map(({maintenanceID, equipmentID, maintenanceTitle, maintenanceTypeID, rowVersion}) => ({maintenanceID, equipmentID, maintenanceTitle, maintenanceTypeID, rowVersion}));
-                    console.log(columnify(mainSummaries));
-                } else {
-                    console.log('No equipment maintenance returned.');
-                };
+                console.log(formatFiltered(data.maintenance, [
+                    'maintenanceID', 'equipmentID', 'maintenanceTitle', 'maintenanceTypeID', 'rowVersion'
+                ], columnify, 'No equipment maintenance returned.'));
+                return data.maintenance;
             });
         }
     });

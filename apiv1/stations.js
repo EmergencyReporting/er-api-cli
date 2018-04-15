@@ -1,6 +1,7 @@
 const {addFunction} = require('../parser');
 const {getStations} = require('@ercorp/er-api-js/apiv1/stations');
 const columnify = require('columnify');
+const {formatFiltered} = require('../util');
 
 const addV1Stations = () => {
     addFunction({
@@ -11,15 +12,10 @@ const addV1Stations = () => {
         cb: params => {
             const limit = parseInt(params[1] || '5', 10);
             return getStations({limit}).then(data => {
-                if (data.stations && data.stations.length) {
-                    const stationsSummaries = data
-                        .stations
-                        .map(({stationID, stationNumber, stationName}) => ({stationID, stationNumber, stationName}));
-                    console.log(columnify(stationsSummaries));
-                } else {
-                    console.log('No stations returned.');
-                };
-                return data;
+                console.log(formatFiltered(data.stations, [
+                    'stationID', 'stationNumber', 'stationName'
+                ], columnify, 'No stations returned.'));
+                return data.stations;
             });
         }
     });

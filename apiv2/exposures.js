@@ -1,7 +1,14 @@
-const { addFunction } = require('../parser');
-const { getAllExposureNarratives, getExposureNarratives, getAllIncidentExposures, getAllExposuresLocations, getAllExposuresApparatuses, getAllExposuresFires } = require('@ercorp/er-api-js/apiv2/exposures');
+const {addFunction} = require('../parser');
+const {
+    getAllExposureNarratives,
+    getExposureNarratives,
+    getAllIncidentExposures,
+    getAllExposuresLocations,
+    getAllExposuresApparatuses,
+    getAllExposuresFires
+} = require('@ercorp/er-api-js/apiv2/exposures');
 const columnify = require('columnify');
-const { splitParams, addParamIfPresent } = require('../util');
+const {splitParams, addParamIfPresent, formatFiltered} = require('../util');
 
 const addV2ExposuresFunctions = () => {
     addFunction({
@@ -18,16 +25,16 @@ const addV2ExposuresFunctions = () => {
             addParamIfPresent(queryParams, sp, 'rowVersion', 4);
 
             return getAllExposureNarratives(queryParams).then(data => {
-                if (data.narratives && data.narratives.length) {
-                    const narratives = data.narratives.map(({
-                        exposureID, narrativeID, narrativeTitle, narrative, isCadNarrative, archive, rowVersion
-                    }) => ({
-                        exposureID, narrativeID, narrativeTitle, narrative, isCadNarrative, archive, rowVersion
-                    }));
-                    console.log(columnify(narratives));
-                } else {
-                    console.log('No Narratives returned.');
-                };
+                console.log(formatFiltered(data.narratives, [
+                    'exposureID',
+                    'narrativeID',
+                    'narrativeTitle',
+                    'narrative',
+                    'isCadNarrative',
+                    'archive',
+                    'rowVersion'
+                ], columnify, 'No Narratives returned.'));
+                return data.narratives;
             });
         }
     });
@@ -109,7 +116,7 @@ const addV2ExposuresFunctions = () => {
                 } else {
                     console.log('No exposure apparatuses returned.');
                 };
-                return data;
+                return data.apparatuses;
             });
         }
     });

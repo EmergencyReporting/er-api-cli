@@ -1,7 +1,7 @@
 const {addFunction} = require('../parser');
 const {getAllEquipment} = require('@ercorp/er-api-js/apiv1/equipment');
 const columnify = require('columnify');
-const {splitParams, addParamIfPresent} = require('../util');
+const {splitParams, addParamIfPresent, formatFiltered} = require('../util');
 
 const addV1Equipment = () => {
     addFunction({
@@ -20,15 +20,10 @@ const addV1Equipment = () => {
             addParamIfPresent(queryParams, sp, 'rowVersion', 5);
 
             return getAllEquipment(queryParams).then(data => {
-                if (data.equipment && data.equipment.length > 0) {
-                    const equipmentSummaries = data
-                        .equipment
-                        .map(({equipmentID, inService, categoryID, equipmentType, rowVersion}) => ({equipmentID, inService, categoryID, equipmentType, rowVersion}));
-                    console.log(columnify(equipmentSummaries));
-                } else {
-                    console.log('No equipment returned.');
-                };
-                return data;
+                console.log(formatFiltered(data.equipment, [
+                    'equipmentID', 'inService', 'categoryID', 'equipmentType', 'rowVersion'
+                ], columnify, 'No equipment returned.'));
+                return data.equipment;
             });
         }
     });

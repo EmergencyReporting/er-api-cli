@@ -1,6 +1,7 @@
 const {addFunction} = require('../parser');
 const {getApparatuses} = require('@ercorp/er-api-js/apiv1/apparatus');
 const columnify = require('columnify');
+const {formatFiltered} = require('../util');
 
 const addV1Apparatus = () => {
     addFunction({
@@ -11,29 +12,15 @@ const addV1Apparatus = () => {
         cb: params => {
             const limit = parseInt(params[1] || '5', 10);
             return getApparatuses({limit}).then(data => {
-                if (data.apparatuses && data.apparatuses.length) {
-                    const apparatusSummaries = data
-                        .apparatuses
-                        .map(({
-                            departmentApparatusID,
-                            apparatusID,
-                            stationName,
-                            stationNumber,
-                            vehicleNumber,
-                            archive
-                        }) => ({
-                            apparatusID,
-                            departmentApparatusID,
-                            stationName,
-                            stationNumber,
-                            vehicleNumber,
-                            archive
-                        }));
-                    console.log(columnify(apparatusSummaries));
-                } else {
-                    console.log('No Apparatus returned.');
-                }
-                return data;
+                console.log(formatFiltered(data.apparatuses, [
+                    'departmentApparatusID',
+                    'apparatusID',
+                    'stationName',
+                    'stationNumber',
+                    'vehicleNumber',
+                    'archive'
+                ], columnify, 'No Apparatus returned.'));
+                return data.apparatuses;
             })
         }
     });
