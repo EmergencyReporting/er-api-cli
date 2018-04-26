@@ -12,12 +12,7 @@ const readAuthContents = () => readFile(authStore)
 
 const loadAuth = () => readAuthContents().then(contents => updateAuthInfo(contents || {}));
 
-addAuthUpdateListener(newAuthContents => {
-    readAuthContents().then(storedAuth => {
-        const authContents = Object.assign({}, storedAuth, newAuthContents);
-        return writeFile(authStore, JSON.stringify(authContents));
-    });
-});
+addAuthUpdateListener(newAuthContents => writeFile(authStore, JSON.stringify(newAuthContents)));
 
 module.exports = {
     loadAuth

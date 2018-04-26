@@ -24,6 +24,7 @@ const addV2Inspections = () => {
                     'inspectorUserID',
                     'occupancyID',
                     'inspectionDate',
+                    'inspectionDateDone',
                     'locked',
                     'inspectionType',
                     'formID',

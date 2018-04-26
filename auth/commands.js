@@ -1,5 +1,5 @@
 const columnify = require('columnify');
-const {updateAuthInfo, addAuthUpdateListener, clearUserInfo} = require('@ercorp/er-api-js/auth/store');
+const {updateAuthInfo, addAuthUpdateListener, logoutUserInfo} = require('@ercorp/er-api-js/auth/store');
 const {addFunction} = require('../parser');
 
 let authInfo = {};
@@ -53,9 +53,7 @@ const addAuthFunctions = () => {
     });
     addFunction({
         command: 'LogoutAuth',
-        cb: () => {
-            return clearUserInfo();
-        }
+        cb: () => logoutUserInfo()
     });
     addAuthUpdateListener(newAuth => {
         authInfo = newAuth;
