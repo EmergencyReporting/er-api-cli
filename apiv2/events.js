@@ -1,5 +1,6 @@
 const {addFunction} = require('../parser');
-const {getEvents, getEventsPeoples, getEvent, getEventPeoples} = require('@ercorp/er-api-js/apiv2/events');
+const erapijs = require('@ercorp/er-api-js');
+const {getEvents, getEventsPeoples, getEvent, getEventPeoples} = erapijs.apiv2.events;
 const columnify = require('columnify');
 const {splitParams, addParamIfPresent, formatFiltered} = require('../util');
 

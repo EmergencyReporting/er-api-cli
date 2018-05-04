@@ -1,7 +1,8 @@
 const fs = require('fs');
 const Promise = require('bluebird');
 const {homedir} = require('os');
-const {updateAuthInfo, addAuthUpdateListener} = require('@ercorp/er-api-js/auth/store');
+const erapijs = require('@ercorp/er-api-js');
+const {updateAuthInfo, addAuthUpdateListener} = erapijs.auth.store;
 const authStore = `${homedir()}/er-auth.json`;
 const readFile = Promise.promisify(fs.readFile);
 const writeFile = Promise.promisify(fs.writeFile);

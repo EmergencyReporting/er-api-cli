@@ -1,4 +1,5 @@
 const {addFunction} = require('../parser');
+const erapijs = require('@ercorp/er-api-js');
 const {
     getAllExposureNarratives,
     getExposureNarratives,
@@ -6,7 +7,7 @@ const {
     getAllExposuresLocations,
     getAllExposuresApparatuses,
     getAllExposuresFires
-} = require('@ercorp/er-api-js/apiv2/exposures');
+} = erapijs.apiv2.exposures;
 const columnify = require('columnify');
 const {splitParams, addParamIfPresent, formatFiltered} = require('../util');
 

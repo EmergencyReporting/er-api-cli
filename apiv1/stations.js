@@ -1,5 +1,6 @@
 const {addFunction} = require('../parser');
-const {getStations} = require('@ercorp/er-api-js/apiv1/stations');
+const erapijs = require('@ercorp/er-api-js');
+const {getStations} = erapijs.apiv1.stations;
 const columnify = require('columnify');
 const {formatFiltered} = require('../util');
 

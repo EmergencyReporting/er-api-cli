@@ -1,5 +1,6 @@
 const {addFunction} = require('../parser');
-const {getRosters, createRoster, deleteRoster} = require('@ercorp/er-api-js/apiv2/rosters');
+const erapijs = require('@ercorp/er-api-js');
+const {getRosters, createRoster, deleteRoster} = erapijs.apiv2.rosters;
 const columnify = require('columnify');
 const {splitParams, addParamIfPresent, formatFiltered} = require('../util');
 

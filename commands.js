@@ -1,7 +1,8 @@
 const Promise = require('bluebird');
 const columnify = require('columnify');
 const {addFunction, listCommands} = require('./parser');
-const {updateAuthInfo} = require('@ercorp/er-api-js/auth/store');
+const erapijs = require('@ercorp/er-api-js');
+const {updateAuthInfo} = erapijs.auth.store;
 
 const addGeneralFunctions = (rl) => {
     addFunction({

@@ -1,6 +1,7 @@
 const columnify = require('columnify');
-const {updateAuthInfo, addAuthUpdateListener, logoutUserInfo} = require('@ercorp/er-api-js/auth/store');
+const erapijs = require('@ercorp/er-api-js');
 const {addFunction} = require('../parser');
+const {updateAuthInfo, addAuthUpdateListener, logoutUserInfo} = erapijs.auth.store;
 
 let authInfo = {};
 

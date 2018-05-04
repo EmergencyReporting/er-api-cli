@@ -1,5 +1,6 @@
 const {addFunction} = require('../parser');
-const {getAllApparatus, getApparatus, getAllApparatusCompartments, getAllApparatusCrews, getApparatusMaintenances} = require('@ercorp/er-api-js/apiv2/apparatus');
+const erapijs = require('@ercorp/er-api-js');
+const {getAllApparatus, getApparatus, getAllApparatusCompartments, getAllApparatusCrews, getApparatusMaintenances} = erapijs.apiv2.apparatus;
 const columnify = require('columnify');
 const {splitParams, addParamIfPresent, formatFiltered} = require('../util');
 

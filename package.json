@@ -1,6 +1,6 @@
 {
   "name": "@ercorp/er-api-cli",
-  "version": "0.9.3",
+  "version": "1.0.0",
   "description": "Commandline Emergency Reporting API browser",
   "main": "index.js",
   "scripts": {
@@ -17,7 +17,7 @@
     "url": "https://github.com/EmergencyReporting/er-api-cli.git"
   },
   "dependencies": {
-    "@ercorp/er-api-js": "^0.9.3",
+    "@ercorp/er-api-js": "^1.0.0",
     "bluebird": "^3.5.1",
     "cli-parser": "^1.0.4",
     "columnify": "^1.5.4",

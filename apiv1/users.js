@@ -1,9 +1,6 @@
 const {addFunction} = require('../parser');
-const {getMyAccount} = require('@ercorp/er-api-js/apiv1/accounts');
-const {getMyUser, getUsers, getUser} = require('@ercorp/er-api-js/apiv1/users');
-const {getStations} = require('@ercorp/er-api-js/apiv1/stations');
-const {getApparatuses} = require('@ercorp/er-api-js/apiv1/apparatus');
-const {addV1Equipment} = require('./equipment');
+const erapijs = require('@ercorp/er-api-js');
+const {getMyUser, getUsers, getUser} = erapijs.apiv1.users;
 const columnify = require('columnify');
 
 const usersFormatting = users => Promise.resolve(users.map(({userID, fullName, email, primaryEmail, login}) => ({
